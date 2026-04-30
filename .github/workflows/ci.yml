@@ -42,3 +42,25 @@ jobs:
 
       - name: Run Stylelint
         run: npm run lint:css
+
+  docker-build:
+    name: Docker Image Build
+    runs-on: ubuntu-latest
+    needs: [lint-html, lint-css]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build static site
+        run: npm run build
+
+      - name: Build Docker image
+        run: docker build -t uni-notice-board:latest .
